@@ -4,7 +4,7 @@
 
 <sup>1</sup> Université Paris Cité, LIPADE &nbsp;&nbsp; <sup>2</sup> IPGP &nbsp;&nbsp; <sup>3</sup> CEA
 
-📄 Paper: `<PAPER-LINK>` &nbsp;·&nbsp; 💾 Datasets: `<DATASET-LINK>`
+📄 Paper: `<PAPER-LINK>` &nbsp;·&nbsp; 💾 Datasets: `https://zenodo.org/records/23084529`
 
 ## Abstract
 
@@ -25,18 +25,11 @@ workload, while returning exactly the same results.
 If you use TREMOR or our datasets, please cite:
 
 ```bibtex
-@article{tremor,
+@article{chatzakis2026tremor,
   title   = {TREMOR: Template Matching for Large Seismic Data Collections},
   author  = {Chatzakis, Manos and Flores-Allende, Rodrigo and Freire, Mikael and Cano, Yoann and Seydoux, L{\'e}onard and Palpanas, Themis},
   journal = {TODO},
-  year    = {TODO}
-}
-
-@misc{tremor-datasets,
-  title  = {TREMOR datasets: TODO},
-  author = {TODO},
-  year   = {TODO},
-  doi    = {TODO}
+  year    = {2026}
 }
 
 @article{duverger2021ceaseismic,

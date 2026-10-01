@@ -1,0 +1,165 @@
+#ifndef INDEXING_HPP
+#define INDEXING_HPP
+
+#include <cstdlib>
+#include <vector>
+#include <mpi.h>
+#include <pthread.h>
+
+#include "../../isax/iSAXIndex.hpp"
+#include "../../isax/iSAXPqueue.hpp"
+#include "replication.hpp"
+
+// Capacity of each batch's PQ pointer array, not a tuning knob: chunks of
+// >1e9 samples overflowed 2000 (8 bytes per slot, one array per batch).
+constexpr int MAX_PQs_WORKSTEALING = 1 << 16;
+
+enum class DynamicSchedulingMode
+{
+    PERIODIC_CHECK = 0,
+    STANDALONE_THREAD
+};
+
+struct NodeList
+{
+    isax_node **nlist;
+    int node_amount;
+
+    int data_amount;
+    ts_type *rawfile;
+};
+
+struct SubtreeBatch
+{
+    int id;
+    int from;
+    int to;
+    int size;
+
+    volatile int current_subtree_to_process;
+
+    char processed_phase_1;
+
+    char is_getting_help_phase1;
+
+    int pq_th;
+    int pq_amount;
+
+    pthread_mutex_t pq_insert_lock;
+    // +1: readers iterate pq[0..pq_amount], and pq_amount can reach the cap.
+    pqueue_t *pq[MAX_PQs_WORKSTEALING + 1];
+
+    NodeList *nodelist;
+
+    int max_pq_index;
+    int min_pq_index;
+
+    int is_stolen;
+};
+
+struct BatchList
+{
+    SubtreeBatch *batches;
+    int batch_amount;
+};
+
+using CommunicationModuleFunc = int (*)(int *q_loaded, int q_num, int *process_buffer,
+                                        MPI_Request *request, int *rec_message,
+                                        MPI_Request *send_request, int *termination_message_id,
+                                        ReplicationData *replication_data, int my_rank, int comm_sz,
+                                        bool verbose);
+
+struct CommunicationModuleData
+{
+    int q_num;
+    int *q_loaded;
+    int *process_buffer;
+    int *rec_message;
+    int *termination_message_id;
+
+    ReplicationData *replication_data;
+    int my_rank;
+    int comm_sz;
+
+    bool verbose;
+
+    DynamicSchedulingMode mode;
+
+    MPI_Request *request;
+    MPI_Request *send_request;
+
+    CommunicationModuleFunc module_func;
+};
+
+inline int call_module(CommunicationModuleData *comm_data)
+{
+    return (comm_data->module_func)(comm_data->q_loaded, comm_data->q_num,
+                                    comm_data->process_buffer, comm_data->request,
+                                    comm_data->rec_message, comm_data->send_request,
+                                    comm_data->termination_message_id,
+                                    comm_data->replication_data, comm_data->my_rank, comm_data->comm_sz,
+                                    comm_data->verbose);
+}
+
+BatchList *create_subtree_batches(NodeList *nodelist, int number_of_batches_to_create, int pq_th);
+// Returns the batches of create_subtree_batches for reuse by the next query.
+void release_subtree_batches(BatchList *batchlist);
+
+long int find_total_nodes(isax_node *root_node);
+long int find_total_leafs_nodes(isax_node *root_node);
+long int find_tree_height(isax_node *root_node);
+long int count_ts_in_nodes(isax_node *root_node, const char parallelism_in_subtree,
+                           const char recBuf_helpers_exist);
+long int find_total_nodes_tmp(isax_node *root_node);
+long int find_tree_height_tmp(isax_node *root_node);
+
+void print_index_stats(isax_index *index, int my_rank);
+
+constexpr char NO_PARALLELISM_IN_SUBTREE = 0;
+
+struct buffer_data_inmemory_ekosmas
+{
+    isax_index *index;
+    pthread_mutex_t *lock_firstnode;
+    int workernumber;
+
+    unsigned long *shared_start_number;
+    idx_t ts_num;
+    pthread_barrier_t *wait_summaries_to_compute;
+    int *node_counter;
+
+    char parallelism_in_subtree;
+    volatile unsigned long *next_iSAX_group;
+
+    float *rawfile;
+    bool deterministic_index;
+
+    idx_t local_chunk_start;
+    idx_t local_chunk_length;
+    idx_t local_owned_subseq_start;
+    idx_t local_owned_subseq_count;
+    int subsequence_length;
+    float *subsequence_means;
+    float *subsequence_stds;
+    sax_type *subsequence_sax; // iSAX word of every owned subsequence, in waveform order
+
+    int index_threads;
+    int readblock;
+    int my_rank;
+    int comm_sz;
+
+    ReplicationData *replication_data;
+};
+
+root_mask_type isax_pRecBuf_index_insert_inmemory_ekosmas(isax_index *index,
+                                                          sax_type *sax,
+                                                          file_position_type *pos,
+                                                          pthread_mutex_t *lock_firstnode,
+                                                          int workernumber,
+                                                          int total_workernumber);
+
+void tree_index_creation_from_pRecBuf_fai_blocking(void *transferdata);
+
+void *index_creation_sequence_worker(void *transferdata);
+
+#endif

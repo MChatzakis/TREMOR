@@ -1,0 +1,203 @@
+{
+  "amplitude_stats": {
+    "finite_points": 837000,
+    "inf_points": 0,
+    "max": 1097.1190185546875,
+    "mean": 0.0001716170891328319,
+    "min": -1226.3458251953125,
+    "nan_points": 0
+  },
+  "binary_file_name": "tem279.RD_ROSF__BHZ.len3000.fmin1.0.fmax10.0.bin",
+  "binary_file_size_bytes": 3348000,
+  "channel": "BHZ",
+  "created_at_utc": "2026-09-17T10:48:39.879649Z",
+  "dataset": "seiFR",
+  "dtype": "float32",
+  "frequency": {
+    "bandpass_max_hz": 10.0,
+    "bandpass_min_hz": 1.0,
+    "downsample_factor": 2,
+    "sampling_rate_hz": 25.0,
+    "sampling_rates_hz": [
+      25.0
+    ]
+  },
+  "kind": "template_queries",
+  "location": "",
+  "max_original_template_length_points": 3000,
+  "min_original_template_length_points": 3000,
+  "network": "RD",
+  "number_of_queries": 279,
+  "number_of_templates": 279,
+  "packed_layout": "flat concatenation; template i occupies [i * template_length_points, (i + 1) * template_length_points)",
+  "packed_total_points": 837000,
+  "pipeline_version": 2,
+  "query_policy": "complete observed windows; intended duration rounded down to a multiple of 8",
+  "selection_filters": {
+    "channels": null,
+    "locations": null,
+    "networks": null,
+    "stations": null
+  },
+  "signal_processing": {
+    "detrend": [
+      "constant",
+      "linear"
+    ],
+    "downsample": {
+      "factor": 2,
+      "method": "ObsPy decimate(no_filter=True) after anti-alias bandpass"
+    },
+    "filter": {
+      "freqmax": 10.0,
+      "freqmin": 1.0,
+      "type": "bandpass",
+      "zerophase": true
+    },
+    "gap_fill": {
+      "method": "Gaussian noise in masked gaps",
+      "noise_scale": 3.0,
+      "seed": 0
+    },
+    "taper": {
+      "max_percentage": 0.02,
+      "type": "cosine"
+    },
+    "trim": "actual available bounds for each loaded template window"
+  },
+  "source": {
+    "catalog_arrival_count": 5240,
+    "catalog_arrivals_selected": 5240,
+    "catalog_event_count": 1958,
+    "group": {
+      "event_public_ids_preview": [
+        "795236",
+        "795236",
+        "684327",
+        "684327",
+        "980860",
+        "980860",
+        "826937",
+        "826937",
+        "292892",
+        "292892",
+        "359941",
+        "520296",
+        "520296",
+        "824962",
+        "824962",
+        "365676",
+        "365676",
+        "543144",
+        "543144",
+        "322771"
+      ],
+      "original_length_counts": [
+        {
+          "count": 279,
+          "length": 3001
+        }
+      ],
+      "phase_hint_counts": [
+        {
+          "count": 7,
+          "phase": "P"
+        },
+        {
+          "count": 72,
+          "phase": "Pg"
+        },
+        {
+          "count": 64,
+          "phase": "Pn"
+        },
+        {
+          "count": 86,
+          "phase": "Sg"
+        },
+        {
+          "count": 50,
+          "phase": "Sn"
+        }
+      ],
+      "pick_public_ids_preview": [
+        "pickid=556031",
+        "pickid=995709",
+        "pickid=427800",
+        "pickid=336221",
+        "pickid=222873",
+        "pickid=217522",
+        "pickid=930029",
+        "pickid=664881",
+        "pickid=762099",
+        "pickid=740493",
+        "pickid=842481",
+        "pickid=584444",
+        "pickid=689746",
+        "pickid=680647",
+        "pickid=981698",
+        "pickid=679291",
+        "pickid=738106",
+        "pickid=569969",
+        "pickid=364400",
+        "pickid=57196"
+      ],
+      "requested_end_max": "2020-12-10T17:09:49",
+      "requested_start_min": "2020-01-01T08:11:42",
+      "sampling_rates_hz": [
+        25.0
+      ],
+      "source_candidate_indices_preview": [
+        13,
+        14,
+        67,
+        68,
+        131,
+        132,
+        134,
+        135,
+        182,
+        183,
+        328,
+        351,
+        352,
+        362,
+        363,
+        401,
+        402,
+        432,
+        433,
+        560
+      ],
+      "source_candidate_indices_preview_limit": 20,
+      "template_count": 279,
+      "trace_end_max": "2020-12-10T17:09:49",
+      "trace_start_min": "2020-01-01T08:11:42"
+    },
+    "loaded_matching_templates": 4430,
+    "skipped_by_selection_after_load": 0,
+    "skipped_by_selection_before_load": 0,
+    "skipped_empty_traces": 809,
+    "skipped_incomplete_traces": 1,
+    "skipped_missing_pick": 0,
+    "template_lead_time_seconds": 2.0,
+    "template_source": "qml",
+    "template_window_length_seconds": 120.0
+  },
+  "station": "ROSF",
+  "summary_output": {
+    "plot_error": null,
+    "plot_sample_count": 5,
+    "plot_sample_indices": [
+      75,
+      85,
+      141,
+      175,
+      233
+    ],
+    "plot_sample_seed": 0,
+    "plot_sample_target": 5,
+    "plot_style": "randomly sampled query templates rendered as vertically stacked subplots (one axis per sampled template)"
+  },
+  "template_length_points": 3000
+}

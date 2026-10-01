@@ -1,0 +1,23 @@
+# Build outputs
+bin/
+*.o
+*.d
+
+# Experiment outputs and logs
+experiments/evals/
+experiments/logs/*
+!experiments/logs/.gitkeep
+dataprep/maule/logs/*
+dataprep/seiFR/logs/*
+!dataprep/*/logs/.gitkeep
+dataprep/maule/metadata/
+dataprep/seiFR/metadata/
+results/
+
+# Notebook figures
+notebooks/figures/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

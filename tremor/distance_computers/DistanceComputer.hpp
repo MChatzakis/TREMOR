@@ -1,0 +1,136 @@
+#ifndef DISTANCECOMPUTER_HPP
+#define DISTANCECOMPUTER_HPP
+
+#include "../utils/SIMD.hpp"
+#include <cmath>
+#include <unordered_map>
+#include <iostream>
+#include <stdexcept>
+
+#include "../isax/iSAXTypes.hpp"
+#include "../isax/SAX.hpp"
+
+enum class DistanceType
+{
+    L2_SQUARED = 0
+};
+
+namespace std
+{
+    template <>
+    struct hash<DistanceType>
+    {
+        std::size_t operator()(const DistanceType &dt) const noexcept
+        {
+            return std::hash<int>()(static_cast<int>(dt));
+        }
+    };
+}
+
+/**
+ * @class DistanceComputer
+ * @brief Unified distance computation interface with SIMD optimizations
+ *
+ * Provides L2 Euclidean distance computations with SIMD optimizations.
+ * with SIMD-accelerated implementations. Supports PAA-to-iSAX minimum distance calculations,
+ * SAX transformations, and lower-bound distance functions (LB_Keogh) for efficient pruning.
+ *
+ * @note Use compute_dist() for full distance or compute_minidist_SIMD() for lower bounds.
+ */
+class DistanceComputer
+{
+private:
+    DistanceType distance_type;
+
+    std::unordered_map<DistanceType, float (DistanceComputer::*)(float *, float *, int, float)> distance_map;
+
+    void init_distance_map();
+    float l2_dist(float *t, float *s, int dim, float bound);
+    float l2_dist_SIMD(float *t, float *s, int dim, float bound);
+    float l2_dist_naive(float *t, float *s, int dim, float bound);
+
+public:
+    // Constructor
+    DistanceComputer(DistanceType distance_type)
+    {
+        init_distance_map();
+
+        this->distance_type = distance_type;
+
+        if (distance_map.find(distance_type) == distance_map.end())
+        {
+            throw std::invalid_argument("Distance type not supported");
+        }
+    }
+
+    // Destructor
+    ~DistanceComputer() = default;
+
+    float compute_dist(float *t,
+                       float *s,
+                       int dim,
+                       float bound);
+
+    float compute_minidist_SIMD(const ts_type *q_paa,
+                                const sax_type *db_sax,
+                                const int *max_sax_cardinalities,
+                                int sax_bit_cardinality,
+                                int sax_alphabet_cardinality,
+                                int paa_segments,
+                                float minval,
+                                float maxval,
+                                bool mindist_sqrt);
+
+    void compute_paa_from_ts(const float *ts,
+                             ts_type *paa,
+                             int paa_segments,
+                             int ts_values_per_segment);
+
+    bool compute_sax_from_ts(const float *ts,
+                             sax_type *sax,
+                             int ts_values_per_paa_segment,
+                             int paa_segments,
+                             int sax_alphabet_cardinality,
+                             int sax_bit_cardinality);
+
+    float compute_dist_SIMD(float *t,
+                            float *s,
+                            int dim,
+                            float bound);
+
+    ////// Wrapper Methods's signatures for SAX.hpp functions //////
+    float wrap_minidist_paa_to_isax(float *paa, sax_type *sax,
+                                    sax_type *sax_cardinalities,
+                                    sax_type max_bit_cardinality,
+                                    int max_cardinality,
+                                    int number_of_segments,
+                                    int min_val,
+                                    int max_val,
+                                    float ratio_sqrt);
+
+    float wrap_minidist_paa_to_isax_raw_SIMD(float *paa, sax_type *sax,
+                                             sax_type *sax_cardinalities,
+                                             sax_type max_bit_cardinality,
+                                             int max_cardinality,
+                                             int number_of_segments,
+                                             int min_val,
+                                             int max_val,
+                                             float ratio_sqrt);
+
+    float wrap_ts_euclidean_distance(ts_type *t, ts_type *s, int size, float bound);
+
+    float wrap_ts_euclidean_distance_SIMD(ts_type *t, ts_type *s, int size, float bound);
+
+    float wrap_minidist_paa_to_isax_rawa_SIMD(float *paa, sax_type *sax,
+                                              sax_type *sax_cardinalities,
+                                              sax_type max_bit_cardinality,
+                                              int max_cardinality,
+                                              int number_of_segments,
+                                              int min_val,
+                                              int max_val,
+                                              float ratio_sqrt);
+
+    float wrap_lb_keogh_data_bound(float *qo, float *tu, float *tl, float *cb, int len, float bsf);
+};
+
+#endif // DISTANCECOMPUTER_HPP

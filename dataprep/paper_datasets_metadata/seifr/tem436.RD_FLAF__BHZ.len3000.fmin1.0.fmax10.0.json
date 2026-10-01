@@ -1,0 +1,207 @@
+{
+  "amplitude_stats": {
+    "finite_points": 1308000,
+    "inf_points": 0,
+    "max": 2445.741943359375,
+    "mean": -8.490532324140077e-05,
+    "min": -1732.982421875,
+    "nan_points": 0
+  },
+  "binary_file_name": "tem436.RD_FLAF__BHZ.len3000.fmin1.0.fmax10.0.bin",
+  "binary_file_size_bytes": 5232000,
+  "channel": "BHZ",
+  "created_at_utc": "2026-09-17T10:48:38.441441Z",
+  "dataset": "seiFR",
+  "dtype": "float32",
+  "frequency": {
+    "bandpass_max_hz": 10.0,
+    "bandpass_min_hz": 1.0,
+    "downsample_factor": 2,
+    "sampling_rate_hz": 25.0,
+    "sampling_rates_hz": [
+      25.0
+    ]
+  },
+  "kind": "template_queries",
+  "location": "",
+  "max_original_template_length_points": 3000,
+  "min_original_template_length_points": 3000,
+  "network": "RD",
+  "number_of_queries": 436,
+  "number_of_templates": 436,
+  "packed_layout": "flat concatenation; template i occupies [i * template_length_points, (i + 1) * template_length_points)",
+  "packed_total_points": 1308000,
+  "pipeline_version": 2,
+  "query_policy": "complete observed windows; intended duration rounded down to a multiple of 8",
+  "selection_filters": {
+    "channels": null,
+    "locations": null,
+    "networks": null,
+    "stations": null
+  },
+  "signal_processing": {
+    "detrend": [
+      "constant",
+      "linear"
+    ],
+    "downsample": {
+      "factor": 2,
+      "method": "ObsPy decimate(no_filter=True) after anti-alias bandpass"
+    },
+    "filter": {
+      "freqmax": 10.0,
+      "freqmin": 1.0,
+      "type": "bandpass",
+      "zerophase": true
+    },
+    "gap_fill": {
+      "method": "Gaussian noise in masked gaps",
+      "noise_scale": 3.0,
+      "seed": 0
+    },
+    "taper": {
+      "max_percentage": 0.02,
+      "type": "cosine"
+    },
+    "trim": "actual available bounds for each loaded template window"
+  },
+  "source": {
+    "catalog_arrival_count": 5240,
+    "catalog_arrivals_selected": 5240,
+    "catalog_event_count": 1958,
+    "group": {
+      "event_public_ids_preview": [
+        "381427",
+        "381427",
+        "85754",
+        "85754",
+        "234120",
+        "234120",
+        "132735",
+        "691790",
+        "691790",
+        "33682",
+        "33682",
+        "33682",
+        "33682",
+        "765866",
+        "765866",
+        "941759",
+        "941759",
+        "500692",
+        "500692",
+        "747583"
+      ],
+      "original_length_counts": [
+        {
+          "count": 436,
+          "length": 3001
+        }
+      ],
+      "phase_hint_counts": [
+        {
+          "count": 10,
+          "phase": "P"
+        },
+        {
+          "count": 177,
+          "phase": "Pg"
+        },
+        {
+          "count": 23,
+          "phase": "Pn"
+        },
+        {
+          "count": 2,
+          "phase": "S"
+        },
+        {
+          "count": 199,
+          "phase": "Sg"
+        },
+        {
+          "count": 25,
+          "phase": "Sn"
+        }
+      ],
+      "pick_public_ids_preview": [
+        "pickid=947988",
+        "pickid=954711",
+        "pickid=123265",
+        "pickid=786962",
+        "pickid=219382",
+        "pickid=522407",
+        "pickid=68314",
+        "pickid=105547",
+        "pickid=654969",
+        "pickid=952716",
+        "pickid=790107",
+        "pickid=168585",
+        "pickid=378952",
+        "pickid=982911",
+        "pickid=317136",
+        "pickid=814847",
+        "pickid=656901",
+        "pickid=97780",
+        "pickid=936040",
+        "pickid=163328"
+      ],
+      "requested_end_max": "2020-12-12T16:27:54",
+      "requested_start_min": "2020-01-01T03:22:41",
+      "sampling_rates_hz": [
+        25.0
+      ],
+      "source_candidate_indices_preview": [
+        4,
+        5,
+        8,
+        9,
+        15,
+        16,
+        21,
+        25,
+        26,
+        31,
+        32,
+        33,
+        34,
+        43,
+        44,
+        52,
+        53,
+        69,
+        70,
+        84
+      ],
+      "source_candidate_indices_preview_limit": 20,
+      "template_count": 436,
+      "trace_end_max": "2020-12-12T16:27:54",
+      "trace_start_min": "2020-01-01T03:22:41"
+    },
+    "loaded_matching_templates": 4430,
+    "skipped_by_selection_after_load": 0,
+    "skipped_by_selection_before_load": 0,
+    "skipped_empty_traces": 809,
+    "skipped_incomplete_traces": 1,
+    "skipped_missing_pick": 0,
+    "template_lead_time_seconds": 2.0,
+    "template_source": "qml",
+    "template_window_length_seconds": 120.0
+  },
+  "station": "FLAF",
+  "summary_output": {
+    "plot_error": null,
+    "plot_sample_count": 5,
+    "plot_sample_indices": [
+      117,
+      134,
+      221,
+      275,
+      367
+    ],
+    "plot_sample_seed": 0,
+    "plot_sample_target": 5,
+    "plot_style": "randomly sampled query templates rendered as vertically stacked subplots (one axis per sampled template)"
+  },
+  "template_length_points": 3000
+}

@@ -83,7 +83,7 @@ subsequence whose correlation with the template exceeds a threshold). All answer
 
 ## Requirements
 
-- An MPI C/C++ compiler (`mpicxx`, `mpicc`; e.g., Intel MPI or Open MPI) with OpenMP support
+- MPI C/C++ compiler (`mpicxx`, `mpicc`; e.g., Intel MPI or Open MPI) with OpenMP support
 - [FFTW 3](https://www.fftw.org/) (with its threads library, for DMASS)
 - An x86-64 CPU with AVX2 and FMA
 - For the data preparation and the notebook: Python 3 with NumPy, pandas, Matplotlib, Jupyter, and (for `dataprep/`) ObsPy

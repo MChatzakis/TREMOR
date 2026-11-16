@@ -1,0 +1,833 @@
+{
+  "amplitude_stats": {
+    "finite_points": 734603907,
+    "inf_points": 0,
+    "max": 531808.4149242264,
+    "mean": 6.948414501991429e-09,
+    "min": -604717.6777450936,
+    "nan_points": 0
+  },
+  "binary_file_name": "ZE_U65S__HHZ.len734603907.bin",
+  "binary_file_size_bytes": 2938415628,
+  "channel": "HHZ",
+  "created_at_utc": "2026-09-17T11:21:48.026951Z",
+  "dataset": "maule",
+  "dtype": "float32",
+  "frequency": {
+    "bandpass_max_hz": 10.0,
+    "bandpass_min_hz": 1.0,
+    "delta_seconds_values": [
+      0.01
+    ],
+    "downsample_factor": 2,
+    "downsample_factor_requested": 2,
+    "downsample_factors_applied": [
+      2
+    ],
+    "original_sampling_rates_hz": [
+      200.0
+    ],
+    "sampling_rate_hz": 100.0,
+    "sampling_rates_hz": [
+      100.0
+    ]
+  },
+  "generation": {
+    "boundary_samples_dropped": 87,
+    "chunk_days": 1,
+    "chunk_map": [
+      {
+        "count": 8640001,
+        "end_utc": "2010-10-23T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 0,
+        "overlap_samples_dropped": 0,
+        "start_utc": "2010-10-22T00:00:00.000000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-10-24T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 8640001,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-10-23T00:00:00.010000Z"
+      },
+      {
+        "count": 50745,
+        "end_utc": "2010-10-24T00:08:27.450000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 17280001,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-10-24T00:00:00.010000Z"
+      },
+      {
+        "count": 50053,
+        "end_utc": "2010-10-26T00:00:00.000000Z",
+        "gap_seconds_before": 171792.02,
+        "output_start": 17330746,
+        "overlap_samples_dropped": 0,
+        "start_utc": "2010-10-25T23:51:39.480000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-10-27T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 17380799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-10-26T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-10-28T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 26020799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-10-27T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-10-29T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 34660799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-10-28T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-10-30T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 43300799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-10-29T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-10-31T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 51940799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-10-30T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-01T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 60580799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-10-31T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-02T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 69220799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-01T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-03T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 77860799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-02T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-04T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 86500799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-03T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-05T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 95140799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-04T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-06T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 103780799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-05T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-07T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 112420799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-06T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-08T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 121060799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-07T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-09T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 129700799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-08T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-10T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 138340799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-09T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-11T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 146980799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-10T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-12T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 155620799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-11T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-13T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 164260799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-12T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-14T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 172900799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-13T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-15T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 181540799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-14T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-16T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 190180799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-15T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-17T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 198820799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-16T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-18T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 207460799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-17T00:00:00.010000Z"
+      },
+      {
+        "count": 50828,
+        "end_utc": "2010-11-18T00:08:28.280000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 216100799,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-18T00:00:00.010000Z"
+      },
+      {
+        "count": 50395,
+        "end_utc": "2010-11-21T00:00:00.000000Z",
+        "gap_seconds_before": 258187.77,
+        "output_start": 216151627,
+        "overlap_samples_dropped": 0,
+        "start_utc": "2010-11-20T23:51:36.060000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-22T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 216202022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-21T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-23T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 224842022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-22T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-24T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 233482022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-23T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-25T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 242122022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-24T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-26T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 250762022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-25T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-27T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 259402022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-26T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-28T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 268042022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-27T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-29T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 276682022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-28T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-11-30T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 285322022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-29T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-01T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 293962022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-11-30T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-02T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 302602022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-01T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-03T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 311242022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-02T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-04T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 319882022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-03T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-05T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 328522022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-04T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-06T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 337162022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-05T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-07T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 345802022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-06T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-08T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 354442022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-07T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-09T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 363082022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-08T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-10T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 371722022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-09T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-11T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 380362022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-10T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-12T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 389002022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-11T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-13T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 397642022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-12T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-14T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 406282022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-13T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-15T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 414922022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-14T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-16T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 423562022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-15T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-17T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 432202022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-16T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-18T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 440842022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-17T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-19T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 449482022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-18T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-20T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 458122022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-19T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-21T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 466762022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-20T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-22T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 475402022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-21T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-23T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 484042022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-22T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-24T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 492682022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-23T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-25T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 501322022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-24T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-26T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 509962022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-25T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-27T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 518602022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-26T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-28T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 527242022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-27T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-29T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 535882022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-28T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-30T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 544522022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-29T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-12-31T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 553162022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-30T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-01T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 561802022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-12-31T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-02T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 570442022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-01T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-03T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 579082022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-02T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-04T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 587722022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-03T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-05T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 596362022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-04T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-06T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 605002022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-05T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-07T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 613642022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-06T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-08T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 622282022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-07T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-09T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 630922022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-08T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-10T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 639562022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-09T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-11T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 648202022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-10T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-12T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 656842022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-11T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-13T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 665482022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-12T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-14T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 674122022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-13T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-15T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 682762022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-14T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-16T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 691402022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-15T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-17T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 700042022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-16T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-18T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 708682022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-17T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-19T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 717322022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-18T00:00:00.010000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2011-01-20T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 725962022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-19T00:00:00.010000Z"
+      },
+      {
+        "count": 1885,
+        "end_utc": "2011-01-20T00:00:18.850000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 734602022,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2011-01-20T00:00:00.010000Z"
+      }
+    ],
+    "chunks_empty": 1,
+    "chunks_total": 91,
+    "chunks_written": 90,
+    "entry_offset": 5,
+    "entry_stride": 24,
+    "max_days": null,
+    "time_layout": "available chunks concatenated; unavailable intervals omitted and recorded in chunk_map"
+  },
+  "kind": "waveform",
+  "location": "",
+  "network": "ZE",
+  "number_of_points": 734603907,
+  "pipeline_version": 2,
+  "selection_filters": {
+    "channel_prefixes": [
+      "HH",
+      "HN"
+    ],
+    "channels": null,
+    "locations": null,
+    "networks": [
+      "XS",
+      "ZE"
+    ],
+    "stations": null
+  },
+  "signal_processing": {
+    "detrend": [
+      "constant",
+      "linear"
+    ],
+    "downsample": {
+      "applied_factors": [
+        2
+      ],
+      "method": "ObsPy Trace.decimate(no_filter=True) after bandpass when freqmax is below the target Nyquist; otherwise the trace remains at its original sampling rate",
+      "requested_factor": 2
+    },
+    "filter": {
+      "freqmax": 10.0,
+      "freqmin": 1.0,
+      "type": "bandpass",
+      "zerophase": true
+    },
+    "gap_fill": {
+      "fill_ratio": 0.09297796309632016,
+      "filled_samples": 136603958,
+      "method": "Gaussian noise in masked gaps",
+      "noise_scale": 3.0,
+      "reference_samples": 1469207901,
+      "seed": 0
+    },
+    "taper": {
+      "max_percentage": 0.02,
+      "type": "cosine"
+    },
+    "trim": "actual available bounds for each loaded chunk"
+  },
+  "source": {
+    "actual_duration_seconds": 7776018.855,
+    "actual_end": "2011-01-20T00:00:18.855000",
+    "actual_start": "2010-10-22T00:00:00",
+    "requested_end": "2011-01-21T00:00:00",
+    "requested_start": "2010-10-22T00:00:00"
+  },
+  "station": "U65S",
+  "summary_output": {
+    "plot_error": null,
+    "plot_max_points": 200000,
+    "plot_points": 200000,
+    "plot_points_per_chunk": 4000,
+    "plot_style": "streamed min/max overview over the full written waveform"
+  }
+}

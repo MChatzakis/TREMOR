@@ -2,6 +2,7 @@
 #include "tremor/algos/sss/SkipSequential.hpp"
 
 #include <mpi.h>
+#include "tremor/utils/ProcStats.hpp"
 
 #include <cerrno>
 #include <cfloat>
@@ -684,6 +685,12 @@ namespace
 
         if (initialized && !finalized)
         {
+#ifdef TREMOR_STATS
+            int rank = 0;
+            MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+            tremor_print_vmstat(rank, "end");
+            tremor_print_proc_summary(rank);
+#endif
             MPI_Finalize();
         }
     }
@@ -891,6 +898,9 @@ int main(int argc, char **argv)
                     indices.data(),
                     distances.data());
                 timings.search_seconds = query_input_seconds + MPI_Wtime() - search_start;
+#ifdef TREMOR_STATS
+                std::printf("DRIVER rank=%d query_input_s=%.3f search_s=%.3f\n", rank, query_input_seconds, MPI_Wtime() - search_start);
+#endif
 
                 if (rank == 0)
                 {

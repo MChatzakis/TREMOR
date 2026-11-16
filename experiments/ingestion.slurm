@@ -26,11 +26,11 @@ cp -n bin/tremor_main $OUT/tremor_main
 CSV=$OUT/ingestion.n$N.$SLURM_JOB_ID.csv
 echo "dataset,channel,nodes,rep,samples,gb,index_time,index_gb" > $CSV
 
-DATA=${DATA:-/path/to/data}  # the datasets of the paper
+INPUTS=experiments/evals/sub_tremor_main_20260929/inputs
 # dataset channel waveform total_samples window paa queries
 CASES=(
-  "maule ZE_G15S__HHN $DATA/maule/waveforms/ZE_G15S__HHN.len1823755814.bin 1823755814 992 16 $DATA/maule/templates/ZE_G15S__HHN.q50.bin"
-  "seifr RD_ROSF__BHZ $DATA/seifr/waveforms/RD_ROSF__BHZ.len1576800001.bin 1576800001 3000 8 $DATA/seifr/templates/RD_ROSF__BHZ.q50.bin"
+  "maule ZE_G15S__HHN /path/to/data/maule/waveforms/ZE_G15S__HHN.len1823755814.bin 1823755814 992 16 $INPUTS/maule/ZE_G15S__HHN.q50.bin"
+  "seifr RD_ROSF__BHZ /path/to/data/seifr/waveforms/RD_ROSF__BHZ.len1576800001.bin 1576800001 3000 8 $INPUTS/seifr/RD_ROSF__BHZ.q50.bin"
 )
 
 for rep in 1 2; do

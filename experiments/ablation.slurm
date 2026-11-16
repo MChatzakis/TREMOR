@@ -17,15 +17,14 @@
 #   b     lower-bound cut-off of the scan (TREMOR_SCAN_LB_FRACTION)                 t = 0.99, 0.999
 #   leaf  leaf size (--leaf-size)                                                   t = 0.999 and k = 1
 #   paa   PAA segments (--paa-segments)                                             t = 0.999 and k = 1
-#   scan  (not in the default PARAMS) the same templates without the index: the skip-sequential scan (sss), and the
-#         sequential scan without lower bounds (ss)
+#   scan  (not in the default PARAMS) the same templates without the index: TREMOR that never searches its index
+#         (noindex), the skip-sequential scan (sss), and the sequential scan without lower bounds (ss)
 # Output: $OUT/ablation.<channel>.<jobid>.csv, one row per run; the answers of every run are compared with those of
 # the default configuration of the same setting (column "same_answers"). Repetitions go to their own directory
 # (OUT=experiments/evals/ablation_20260930_rep2, ...); the notebook takes the median over the repetitions.
 # PARAMS selects the parameters to vary (default "f b leaf paa"), SETTINGS the workloads of f and scan, FS the values
-# of f, LEAVES the leaf sizes, BIN the binary (default: the binary of the evaluation, experiments/submit_subsets.sh with
-# TAG=20260929). DEF_F and DEF_B are the defaults of f and b, B_SETTINGS the workloads of b, PARAM_SETTINGS those of
-# leaf and paa.
+# of f, LEAVES the leaf sizes, BIN the binary. DEF_F and DEF_B are the defaults of f and b (0.01 and 0.05 until 10-01;
+# the fixed TREMOR of 10-01 uses 0.001 and 0), B_SETTINGS the workloads of b, PARAM_SETTINGS those of leaf and paa.
 # Usage: sbatch --export=ALL,CHANNEL=ZE_G50S__HHN[,OUT=...] experiments/ablation.slurm
 set -uo pipefail
 cd /path/to/TREMOR
@@ -53,7 +52,9 @@ run() {  # param value setting [f] [b] [leaf] [paa]
     [[ $f = never ]] && refinement=(--refinement leaf)
     [[ $f = sss ]] && refinement=(--method skip-sequential)  # the scans, for the same templates
     [[ $f = ss ]] && refinement=(--method sequential)
-    env TREMOR_SCAN_LB_FRACTION=$b srun --kill-on-bad-exit=1 --mpi=pmi2 -n $SLURM_NTASKS numactl --interleave=all $BIN \
+    local seed=()  # TREMOR without its index: never searches it, and takes no first k-NN bound from it
+    [[ $f = noindex ]] && { refinement=(--refinement adaptive --scan-fallback-fraction -1); seed=(TREMOR_NO_KNN_SEED=1); }
+    env TREMOR_SCAN_LB_FRACTION=$b "${seed[@]}" srun --kill-on-bad-exit=1 --mpi=pmi2 -n $SLURM_NTASKS numactl --interleave=all $BIN \
       --dataset $WAVEFORM --dataset-size $SAMPLES --queries $QUERIES --query-count $COUNT --window-length $WINDOW \
       --merge-offset $OFFSET --replication-groups 1 --index-threads 128 --search-workers 128 --leaf-size $leaf \
       --paa-segments $paa --pq-threshold-divisor 16 "${mode[@]}" "${refinement[@]}" \
@@ -77,7 +78,7 @@ SETTINGS=${SETTINGS:-t0.99 t0.999 k1}  # the workloads of f and scan, e.g. "t0.8
 for setting in $SETTINGS; do
   run f $DEF_F $setting  # the default configuration first: the reference answers
   [[ " $PARAMS " == *" f "* ]] && for f in ${FS:-0 0.001 0.1 never}; do run f $f $setting $f; done
-  [[ " $PARAMS " == *" scan "* ]] && for scan in sss ss; do run scan $scan $setting $scan; done
+  [[ " $PARAMS " == *" scan "* ]] && for scan in noindex sss ss; do run scan $scan $setting $scan; done
 done
 for setting in ${B_SETTINGS:-t0.99 t0.999}; do
   [[ " $PARAMS " == *" b "* ]] && for b in 0 0.01 0.05 0.2 0.5 1; do run b $b $setting $DEF_F $b; done

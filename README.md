@@ -7,14 +7,19 @@
 📄 Paper: `<PAPER-LINK>` &nbsp;·&nbsp; 💾 Datasets: `https://zenodo.org/records/23084529`
 
 ## Abstract
-Seismic station networks continuously record the ground velocity at several locations on earth in the form of waveform data series,
-which seismologists analyze to detect various kinds of geophysical events, including earthquakes.
-Some of these events are of particular interest: they are called templates and are used to search the seismic data collections for matching, similar events.
-This is known as template matching, and is a fundamental task in seismology, serving as the backbone for various seismic analyses.
-However, template matching requires extensive processing times, especially for seismic collections that exceed the memory capacity of a single machine.
-This poses a significant challenge to seismologists and is becoming worse as the seismological datasets continue to grow in size.
-In this paper, we introduce TREMOR, a distributed data series processing framework for template matching, designed to efficiently handle large waveform collections.
-We apply TREMOR to two representative real-world seismic use cases for template matching and, through an extensive experimental evaluation, we demonstrate its efficiency, with TREMOR being up to 12x faster than the best competing method, while returning the same, exact results.
+
+Seismic station networks continuously record the ground velocity at several locations on Earth in the form of waveform
+data series, which seismologists analyze to detect various kinds of geophysical events, including earthquakes. Some of
+these events are of particular interest: they are called *templates* and are used to search the seismic data
+collections for matching, similar events. This is known as *template matching*, and is a fundamental task in
+seismology, serving as the backbone for various seismic analyses. However, template matching requires extensive
+processing times, especially for seismic collections that exceed the memory capacity of a single machine. This poses a
+significant challenge to seismologists and is becoming worse as the seismological datasets continue to grow in size.
+In this paper, we introduce TREMOR, a distributed data series processing framework for template matching, designed to
+efficiently handle large waveform collections. We apply TREMOR to two representative real-world seismic use cases for
+template matching and, through an extensive experimental evaluation, we demonstrate its efficiency, with TREMOR being
+up to 6.7× faster than the best competing method on each workload, and up to 18× faster than a distributed version of
+MASS, the FFT-based method popular in seismology, while returning the same, exact results.
 
 
 If you use TREMOR or our datasets, please cite:
@@ -73,7 +78,6 @@ subsequence whose correlation with the template exceeds a threshold). All answer
 | `dmass/` | DMASS, our distributed versions of the MASS algorithm (`DMASS_V1.c`, `DMASS_V3.c`) used as baselines |
 | `dataprep/` | Scripts that build the binary waveforms and templates from the raw seismic recordings, and the metadata (plots and statistics) of the channels used in the paper (`dataprep/paper_datasets_metadata/`) |
 | `experiments/` | Scripts that run the experiments of the paper on a Slurm cluster |
-| `notebooks/` | Analysis notebook: produces the figures and tables of the paper, and checks every number of the paper against the runs |
 | `Makefile` | Builds TREMOR |
 
 ## Requirements
@@ -81,7 +85,7 @@ subsequence whose correlation with the template exceeds a threshold). All answer
 - MPI C/C++ compiler (`mpicxx`, `mpicc`; e.g., Intel MPI or Open MPI) with OpenMP support
 - [FFTW 3](https://www.fftw.org/) (with its threads library, for DMASS)
 - An x86-64 CPU with AVX2 and FMA
-- For the data preparation and the notebook: Python 3 with NumPy, pandas, Matplotlib, Jupyter, and (for `dataprep/`) ObsPy
+- For the data preparation and the experiment scripts: Python 3 with NumPy, pandas, Matplotlib, and (for `dataprep/`) ObsPy
 
 ## Building
 
@@ -139,10 +143,11 @@ The datasets of the paper are available at `<DATASET-LINK>`:
 | | **Maule** | **SeiFR** |
 |---|---|---|
 | Origin | International Maule Aftershock Deployment (IMAD), Chile, 2010 | CEA/LDG network, metropolitan France, 2020–2021 |
-| Channels | 20 | 7 (vertical) |
+| Channels | 243 (all channels with templates and at most 2.1 billion points) | 7 (vertical) |
 | Sampling rate | 50 or 100 Hz | 25 Hz |
-| Points | 13.9 billion (56 GB) | 10.5 billion (42 GB) |
-| Templates used | 972 (50 per channel; all 22 for one channel) | 350 (50 per channel) |
+| Points per channel | 8.6 million – 1.82 billion | 1.05 – 1.58 billion |
+| Points | 166.5 billion (666 GB) | 10.5 billion (42 GB) |
+| Templates used | 11,922 (50 per channel; all of them when a channel has fewer) | 4,430 (all) |
 | Template length | 496, 992, or 1,000 points (10 s) | 3,000 points (120 s) |
 | Search in the paper | threshold search | k-NN search |
 

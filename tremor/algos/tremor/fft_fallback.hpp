@@ -44,8 +44,8 @@ namespace tremor_fft
 
     State &state();
 
-    // At the end of index construction: the spectra of the pieces and the cost calibration; no-op when the
-    // spectra do not fit in memory.
+    // At the end of index construction: the spectra of the pieces and the cost calibration; no-op when
+    // TREMOR_NO_FFT is set or the spectra do not fit in memory.
     void build(const float *raw, idx_t chunk_length, idx_t first_raw, idx_t windows, int m, const float *means,
                const float *stds, int threads, int rank);
 

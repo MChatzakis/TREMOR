@@ -218,6 +218,7 @@ tail -n +2 "$EVAL_ROOT/batches.tsv" | while IFS=$'\t' read -r BATCH_ID DATASET W
     EXTRA_SBATCH=()
     [[ -n "$SBATCH_PARTITION" ]] && EXTRA_SBATCH+=(--partition="$SBATCH_PARTITION")
     [[ -n "$SUBMIT_DEPENDENCY" ]] && EXTRA_SBATCH+=(--dependency="$SUBMIT_DEPENDENCY")
+    [[ -n "${SBATCH_NICE:-}" ]] && EXTRA_SBATCH+=(--nice="$SBATCH_NICE")  # lower priority than our other arrays
 
     ARRAY_SPEC="0-$((TASK_COUNT - 1))"
     if [[ -n "$ARRAY_THROTTLE" ]]; then
@@ -246,13 +247,6 @@ tail -n +2 "$EVAL_ROOT/batches.tsv" | while IFS=$'\t' read -r BATCH_ID DATASET W
         >> "$SUBMISSIONS"
     echo "    submitted $BATCH_ID tasks=$TASK_COUNT runs=$RUN_COUNT nodes=$NODES time=$BATCH_TIME row_timeout=$BATCH_ROW_TIMEOUT job=$JOB_ID"
 done
-
-JOB_IDS="$(tail -n +2 "$SUBMISSIONS" | cut -f9 | paste -sd: -)"
-if [[ -n "$JOB_IDS" ]]; then
-    ANALYSIS_JOB="$(sbatch --parsable --chdir="$REPO_ROOT" --dependency="afterany:$JOB_IDS" \
-        --export="ALL,EVAL_ROOT=$EVAL_ROOT" "$SCRIPT_DIR/analyze_evaluation.slurm")"
-    echo "[+] Analysis job $ANALYSIS_JOB runs after all batches"
-fi
 
 echo "[+] Submitted full evaluation. Not waiting for completion."
 echo "    Eval root:    $EVAL_ROOT"

@@ -11,6 +11,7 @@
 #include <omp.h>
 
 #include "../../isax/SAX.hpp"
+#include "../../utils/ProcStats.hpp"
 #include "../../isax/iSAXPqueue.hpp"
 
 namespace
@@ -32,6 +33,42 @@ namespace
         return static_cast<double>(resident) * static_cast<double>(sysconf(_SC_PAGESIZE));
     }
 
+#ifdef TREMOR_STATS
+    // Diagnostic build only: size, resident memory and transparent huge pages of the mapping that holds `ptr`.
+    static void print_mapping_pages(int rank, const char *name, const void *ptr)
+    {
+        FILE *f = std::fopen("/proc/self/smaps", "r");
+        if (f == nullptr)
+            return;
+        const unsigned long address = reinterpret_cast<unsigned long>(ptr);
+        char line[512];
+        bool inside = false;
+        long size = 0, rss = 0, huge = 0;
+        while (std::fgets(line, sizeof(line), f))
+        {
+            unsigned long lo = 0, hi = 0;
+            if (std::sscanf(line, "%lx-%lx", &lo, &hi) == 2)
+            {
+                if (inside)
+                    break;
+                inside = lo <= address && address < hi;
+                continue;
+            }
+            long v = 0;
+            if (!inside)
+                continue;
+            if (std::sscanf(line, "Size: %ld kB", &v) == 1)
+                size = v;
+            else if (std::sscanf(line, "Rss: %ld kB", &v) == 1)
+                rss = v;
+            else if (std::sscanf(line, "AnonHugePages: %ld kB", &v) == 1)
+                huge = v;
+        }
+        std::fclose(f);
+        std::printf("PAGESTATS rank=%d array=%s size_mb=%.0f rss_mb=%.0f anon_huge_mb=%.0f\n", rank, name, size / 1024.0,
+                    rss / 1024.0, huge / 1024.0);
+    }
+#endif
 
     void read_samples(const std::string &filename, idx_t first, idx_t count, float *out)
     {
@@ -152,6 +189,12 @@ void SkipSequentialScan::build(const std::string &filename, idx_t total_samples,
         }
     }
     summary_bytes = resident_bytes() - resident_after_load;
+#ifdef TREMOR_STATS
+    print_mapping_pages(rank, "raw", raw.data());
+    tremor_print_placement(rank, "raw", raw.data());
+    print_mapping_pages(rank, "means", means.data());
+    print_mapping_pages(rank, "stds", stds.data());
+#endif
 }
 
 float SkipSequentialScan::lower_bound(ts_type *query_paa, idx_t id) const
@@ -181,6 +224,9 @@ void SkipSequentialScan::search_threshold(const float *queries, int query_count,
                                           const std::string &output)
 {
     const float bound = cc_to_ed(correlation, window);
+#ifdef TREMOR_STATS
+    tremor_print_vmstat(rank, "queries");
+#endif
     FILE *out = std::fopen((output + "_" + std::to_string(rank) + ".csv").c_str(), "w");
     if (out == nullptr)
         throw std::runtime_error("cannot write threshold output " + output);
@@ -194,10 +240,16 @@ void SkipSequentialScan::search_threshold(const float *queries, int query_count,
         prepare_query(queries + static_cast<size_t>(q) * window, znorm, paa, order);
 
         std::vector<std::pair<file_position_type, float>> hits;
+#ifdef TREMOR_STATS
+        long long total_blocks = 0;
+#endif
 #pragma omp parallel num_threads(threads)
         {
             std::vector<std::pair<file_position_type, float>> local;
             int blocks = 0;
+#ifdef TREMOR_STATS
+            long long my_blocks = 0;
+#endif
 #pragma omp for schedule(dynamic, RANGE)
             for (long long id = 0; id < static_cast<long long>(subsequences); id++)
             {
@@ -205,14 +257,23 @@ void SkipSequentialScan::search_threshold(const float *queries, int query_count,
                     continue;
                 const float dist = l2_dist_znorm_subsequence(znorm.data(), raw.data(), id, window, means[id], stds[id],
                                                              bound, order.data(), &blocks);
+#ifdef TREMOR_STATS
+                my_blocks += blocks;
+#endif
                 if (dist <= bound)
                     local.emplace_back(first_subsequence + id, dist);
             }
 #pragma omp critical
             {
                 hits.insert(hits.end(), local.begin(), local.end());
+#ifdef TREMOR_STATS
+                total_blocks += my_blocks;
+#endif
             }
         }
+#ifdef TREMOR_STATS
+        std::printf("BLOCKSTATS query=%d blocks=%lld windows=%lld\n", q, total_blocks, static_cast<long long>(subsequences));
+#endif
 
         // Same output as TREMOR: by position, merging detections closer than the merge offset (keep the first).
         std::sort(hits.begin(), hits.end());

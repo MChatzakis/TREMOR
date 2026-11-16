@@ -1,0 +1,193 @@
+{
+  "amplitude_stats": {
+    "finite_points": 33219484,
+    "inf_points": 0,
+    "max": 96295.1385547911,
+    "mean": 4.91352664589232e-09,
+    "min": -92856.02124275564,
+    "nan_points": 0
+  },
+  "binary_file_name": "ZE_GB0S__HHZ.len33219484.bin",
+  "binary_file_size_bytes": 132877936,
+  "channel": "HHZ",
+  "created_at_utc": "2026-09-17T11:52:38.813030Z",
+  "dataset": "maule",
+  "dtype": "float32",
+  "frequency": {
+    "bandpass_max_hz": 10.0,
+    "bandpass_min_hz": 1.0,
+    "delta_seconds_values": [
+      0.01
+    ],
+    "downsample_factor": 2,
+    "downsample_factor_requested": 2,
+    "downsample_factors_applied": [
+      2
+    ],
+    "original_sampling_rates_hz": [
+      200.0
+    ],
+    "sampling_rate_hz": 100.0,
+    "sampling_rates_hz": [
+      100.0
+    ]
+  },
+  "generation": {
+    "boundary_samples_dropped": 6,
+    "chunk_days": 1,
+    "chunk_map": [
+      {
+        "count": 8640001,
+        "end_utc": "2010-04-07T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 0,
+        "overlap_samples_dropped": 0,
+        "start_utc": "2010-04-06T00:00:00.000000Z"
+      },
+      {
+        "count": 51771,
+        "end_utc": "2010-04-07T00:08:37.710000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 8640001,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-04-07T00:00:00.010000Z"
+      },
+      {
+        "count": 50967,
+        "end_utc": "2010-04-20T00:00:00.000000Z",
+        "gap_seconds_before": 1122172.6199999999,
+        "output_start": 8691772,
+        "overlap_samples_dropped": 0,
+        "start_utc": "2010-04-19T23:51:30.340000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-04-21T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 8742739,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-04-20T00:00:00.010000Z"
+      },
+      {
+        "count": 50745,
+        "end_utc": "2010-04-21T00:08:27.450000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 17382739,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-04-21T00:00:00.010000Z"
+      },
+      {
+        "count": 51079,
+        "end_utc": "2010-05-20T00:00:00.000000Z",
+        "gap_seconds_before": 2504581.7600000002,
+        "output_start": 17433484,
+        "overlap_samples_dropped": 0,
+        "start_utc": "2010-05-19T23:51:29.220000Z"
+      },
+      {
+        "count": 8640000,
+        "end_utc": "2010-05-21T00:00:00.000000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 17484563,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-05-20T00:00:00.010000Z"
+      },
+      {
+        "count": 50921,
+        "end_utc": "2010-05-21T00:08:29.210000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 26124563,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-05-21T00:00:00.010000Z"
+      },
+      {
+        "count": 1,
+        "end_utc": "2010-05-28T00:00:00.000000Z",
+        "gap_seconds_before": 604290.78,
+        "output_start": 26175484,
+        "overlap_samples_dropped": 0,
+        "start_utc": "2010-05-28T00:00:00.000000Z"
+      },
+      {
+        "count": 7043999,
+        "end_utc": "2010-05-28T19:33:59.990000Z",
+        "gap_seconds_before": 0.0,
+        "output_start": 26175485,
+        "overlap_samples_dropped": 1,
+        "start_utc": "2010-05-28T00:00:00.010000Z"
+      }
+    ],
+    "chunks_empty": 43,
+    "chunks_total": 53,
+    "chunks_written": 10,
+    "entry_offset": 11,
+    "entry_stride": 24,
+    "max_days": null,
+    "time_layout": "available chunks concatenated; unavailable intervals omitted and recorded in chunk_map"
+  },
+  "kind": "waveform",
+  "location": "",
+  "network": "ZE",
+  "number_of_points": 33219484,
+  "pipeline_version": 2,
+  "selection_filters": {
+    "channel_prefixes": [
+      "HH",
+      "HN"
+    ],
+    "channels": null,
+    "locations": null,
+    "networks": [
+      "XS",
+      "ZE"
+    ],
+    "stations": null
+  },
+  "signal_processing": {
+    "detrend": [
+      "constant",
+      "linear"
+    ],
+    "downsample": {
+      "applied_factors": [
+        2
+      ],
+      "method": "ObsPy Trace.decimate(no_filter=True) after bandpass when freqmax is below the target Nyquist; otherwise the trace remains at its original sampling rate",
+      "requested_factor": 2
+    },
+    "filter": {
+      "freqmax": 10.0,
+      "freqmin": 1.0,
+      "type": "bandpass",
+      "zerophase": true
+    },
+    "gap_fill": {
+      "fill_ratio": 0.0,
+      "filled_samples": 0,
+      "method": "Gaussian noise in masked gaps",
+      "noise_scale": 3.0,
+      "reference_samples": 66438974,
+      "seed": 0
+    },
+    "taper": {
+      "max_percentage": 0.02,
+      "type": "cosine"
+    },
+    "trim": "actual available bounds for each loaded chunk"
+  },
+  "source": {
+    "actual_duration_seconds": 4563239.995,
+    "actual_end": "2010-05-28T19:33:59.995000",
+    "actual_start": "2010-04-06T00:00:00",
+    "requested_end": "2010-05-29T00:00:00",
+    "requested_start": "2010-04-06T00:00:00"
+  },
+  "station": "GB0S",
+  "summary_output": {
+    "plot_error": null,
+    "plot_max_points": 200000,
+    "plot_points": 36440,
+    "plot_points_per_chunk": 4000,
+    "plot_style": "streamed min/max overview over the full written waveform"
+  }
+}

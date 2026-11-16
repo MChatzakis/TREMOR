@@ -14,7 +14,7 @@ def main():
     dmass_max = int(os.environ.get('DMASS_MAX_LOCAL_SAMPLES', 350000000))
     timeout_h = int(os.environ.get('ROW_TIMEOUT_SECONDS', 10800)) / 3600
     lines = ['# DMASS and TREMOR run limits', '',
-             f'Computed from `{args.eval_root}/cases`. Guards come from single-node peak-memory probes.', '',
+             f'Computed from `{args.eval_root}/cases`. Guards come from single-node peak-memory probes (experiments/probe_limits.slurm).', '',
              'One MPI rank runs per node. With replication groups = 0, each rank owns a contiguous partition plus up to window_length - 1 overlap samples.', '',
              '- DMASS uses 32-bit real FFTs of the 7-smooth length >= local samples + window - 1, so local samples must stay below INT_MAX = 2,147,483,647. It caches the chunk spectrum once per rank. Measured peak RSS: 66 GB at 1.07G local samples.',
              '- Measured TREMOR peak RSS (64 threads): 40 GB at 600M, 78 GB at 1.2G, 165 GB at 2.57G local samples (Maule), 81 GB at 1.58G (SeiFR). Nodes have 247 GB.',

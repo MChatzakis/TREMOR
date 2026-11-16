@@ -1,0 +1,161 @@
+{
+  "amplitude_stats": {
+    "finite_points": 1313408,
+    "inf_points": 0,
+    "max": 1223412.875,
+    "mean": 0.7436541809790027,
+    "min": -1125039.25,
+    "nan_points": 0
+  },
+  "binary_file_name": "tem2648.XS_QF15_00_HHZ.len496.fmin1.0.fmax10.0.bin",
+  "binary_file_size_bytes": 5253632,
+  "channel": "HHZ",
+  "created_at_utc": "2026-09-22T13:54:43.092739Z",
+  "dataset": "maule",
+  "dtype": "float32",
+  "frequency": {
+    "bandpass_max_hz": 10.0,
+    "bandpass_min_hz": 1.0,
+    "downsample_factor": 2,
+    "downsample_factor_requested": 2,
+    "downsample_factors_applied": [
+      2
+    ],
+    "original_sampling_rates_hz": [
+      100.0
+    ],
+    "sampling_rate_hz": 50.0,
+    "sampling_rates_hz": [
+      50.0
+    ]
+  },
+  "kind": "template_queries",
+  "location": "00",
+  "max_original_template_length_points": 496,
+  "min_original_template_length_points": 496,
+  "network": "XS",
+  "number_of_queries": 2648,
+  "number_of_templates": 2648,
+  "packed_layout": "flat concatenation; template i occupies [i * template_length_points, (i + 1) * template_length_points)",
+  "packed_total_points": 1313408,
+  "pipeline_version": 2,
+  "query_policy": "complete observed windows; intended duration rounded down to a multiple of 8",
+  "selection_filters": {
+    "channels": null,
+    "locations": null,
+    "networks": [
+      "XS",
+      "ZE"
+    ],
+    "stations": null
+  },
+  "signal_processing": {
+    "detrend": [
+      "constant",
+      "linear"
+    ],
+    "downsample": {
+      "applied_factor_counts": [
+        {
+          "count": 2648,
+          "factor": 2
+        }
+      ],
+      "method": "ObsPy Trace.decimate(no_filter=True) after bandpass when freqmax is below the target Nyquist; otherwise the trace remains at its original sampling rate",
+      "requested_factor": 2
+    },
+    "filter": {
+      "freqmax": 10.0,
+      "freqmin": 1.0,
+      "type": "bandpass",
+      "zerophase": true
+    },
+    "gap_fill": {
+      "method": "Gaussian noise in masked gaps",
+      "noise_scale": 3.0,
+      "seed": 0
+    },
+    "taper": {
+      "max_percentage": 0.02,
+      "type": "cosine"
+    },
+    "trim": "actual available bounds for each loaded template window"
+  },
+  "source": {
+    "csv_candidate_rows_selected": 23410,
+    "csv_total_rows_read": 1972588,
+    "group": {
+      "csv_row_indices_preview": [
+        11699,
+        11774,
+        11819,
+        11894,
+        11939,
+        11999,
+        12074,
+        12119,
+        12179,
+        12239,
+        12299,
+        12359,
+        12419,
+        12479,
+        12539,
+        12614,
+        12659,
+        12719,
+        12821,
+        12822
+      ],
+      "csv_row_indices_preview_limit": 20,
+      "downsample_factor_counts": [
+        {
+          "count": 2648,
+          "factor": 2
+        }
+      ],
+      "original_length_counts": [
+        {
+          "count": 2,
+          "length": 499
+        },
+        {
+          "count": 1,
+          "length": 500
+        },
+        {
+          "count": 2645,
+          "length": 501
+        }
+      ],
+      "original_sampling_rates_hz": [
+        100.0
+      ],
+      "requested_end_max": "2010-05-20T23:27:56",
+      "requested_start_min": "2010-03-17T00:55:37.160000",
+      "sampling_rates_hz": [
+        50.0
+      ],
+      "template_count": 2648,
+      "trace_end_max": "2010-05-20T23:27:56.000001",
+      "trace_start_min": "2010-03-17T00:55:37.160001"
+    },
+    "loaded_matching_templates": 22455
+  },
+  "station": "QF15",
+  "summary_output": {
+    "plot_error": null,
+    "plot_sample_count": 5,
+    "plot_sample_indices": [
+      714,
+      815,
+      1352,
+      1684,
+      2249
+    ],
+    "plot_sample_seed": 0,
+    "plot_sample_target": 5,
+    "plot_style": "randomly sampled query templates rendered as vertically stacked subplots (one axis per sampled template)"
+  },
+  "template_length_points": 496
+}

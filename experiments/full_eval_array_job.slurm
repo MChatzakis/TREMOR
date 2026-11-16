@@ -37,11 +37,11 @@ cd "${SLURM_SUBMIT_DIR:-$PWD}"
 # Optional TREMOR PAA segments per window length, e.g. "1000=10 992=16";
 # windows not listed use PAA_SEGMENTS.
 : "${PAA_BY_WINDOW:=}"
-# Optional TREMOR --refinement (leaf|adaptive); unset keeps the binary default (leaf).
+# Optional TREMOR --refinement (leaf|ordered|scan); unset keeps the binary default.
 : "${TREMOR_REFINEMENT:=}"
 # Optional TREMOR --scan-fallback-fraction (adaptive refinement cutoff).
 : "${TREMOR_SCAN_FALLBACK_FRACTION:=}"
-# Optional TREMOR --method (tremor|skip-sequential|sequential); skip-sequential is the scan baseline (SSS).
+# Optional TREMOR --method (tremor|skip-sequential); skip-sequential is the scan baseline.
 : "${TREMOR_METHOD:=}"
 read -r -a LAUNCH_CMD <<< "$LAUNCH_WRAPPER"
 

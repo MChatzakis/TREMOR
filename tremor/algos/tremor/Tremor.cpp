@@ -13,6 +13,7 @@
 #include "../../utils/SIMD.hpp"
 #include "../../distance_computers/ZnormSearch.hpp"
 #include "fft_fallback.hpp"
+#include "../../utils/ProcStats.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <cstdio>
@@ -25,6 +26,39 @@
 #include <thread>
 #include <chrono>
 #include <cstdint>
+#ifdef TREMOR_STATS
+// Diagnostic build only (-DTREMOR_STATS): per-query pruning counters.
+#include <atomic>
+static std::atomic<long long> g_stat_leaves_queued{0}, g_stat_leaves_popped{0},
+    g_stat_records_seen{0}, g_stat_records_lb_pass{0}, g_stat_scan_blocks{0};
+// Per-query phase times in microseconds: tree traversal (slowest worker),
+// gather/sort, and leaf processing (sum, max and min over workers).
+static std::atomic<long long> g_stat_p1_max{0}, g_stat_gather{0}, g_stat_p2_sum{0},
+    g_stat_p2_max{0}, g_stat_p2_min{0}, g_stat_workers{0};
+static inline long long stat_now_us()
+{
+    return std::chrono::duration_cast<std::chrono::microseconds>(
+               std::chrono::steady_clock::now().time_since_epoch())
+        .count();
+}
+static inline void stat_max(std::atomic<long long> &a, long long v)
+{
+    long long c = a.load();
+    while (v > c && !a.compare_exchange_weak(c, v))
+    {
+    }
+}
+static inline void stat_min(std::atomic<long long> &a, long long v)
+{
+    long long c = a.load();
+    while (v < c && !a.compare_exchange_weak(c, v))
+    {
+    }
+}
+#define TREMOR_STAT(x) (x)
+#else
+#define TREMOR_STAT(x) ((void)0)
+#endif
 #include <atomic>
 #include <mutex>
 #include <condition_variable>
@@ -52,6 +86,42 @@ constexpr bool ENABLE_PRINTS_WORKSTEALING = false;
 
 static RefinementMode g_refinement_mode = RefinementMode::Leaf;
 
+#ifdef TREMOR_STATS
+// Diagnostic build only: size, resident memory and transparent huge pages of the mapping that holds `ptr`.
+static void print_mapping_pages(int rank, const char *name, const void *ptr)
+{
+    FILE *f = std::fopen("/proc/self/smaps", "r");
+    if (f == nullptr)
+        return;
+    const unsigned long address = reinterpret_cast<unsigned long>(ptr);
+    char line[512];
+    bool inside = false;
+    long size = 0, rss = 0, huge = 0;
+    while (std::fgets(line, sizeof(line), f))
+    {
+        unsigned long lo = 0, hi = 0;
+        if (std::sscanf(line, "%lx-%lx", &lo, &hi) == 2)
+        {
+            if (inside)
+                break;
+            inside = lo <= address && address < hi;
+            continue;
+        }
+        long v = 0;
+        if (!inside)
+            continue;
+        if (std::sscanf(line, "Size: %ld kB", &v) == 1)
+            size = v;
+        else if (std::sscanf(line, "Rss: %ld kB", &v) == 1)
+            rss = v;
+        else if (std::sscanf(line, "AnonHugePages: %ld kB", &v) == 1)
+            huge = v;
+    }
+    std::fclose(f);
+    std::printf("PAGESTATS rank=%d array=%s size_mb=%.0f rss_mb=%.0f anon_huge_mb=%.0f\n", rank, name, size / 1024.0,
+                rss / 1024.0, huge / 1024.0);
+}
+#endif
 
 // Resident memory of this process in bytes (Linux /proc).
 static double resident_bytes()
@@ -1136,6 +1206,7 @@ void generate_pqs_of_rs_batch(isax_node *subtree_node, SubtreeBatch *batch, floa
 
     if (subtree_node->is_leaf)
     {
+        TREMOR_STAT(g_stat_leaves_queued++);
         query_result *mindist_result = static_cast<query_result *>(std::malloc(sizeof(query_result)));
         if (mindist_result == nullptr)
         {
@@ -1323,8 +1394,10 @@ int process_pq_of_batch_chatzakis(int current_pq_index, QaWorkerData *input_data
         int my_rank = input_data->my_rank;
         const int ts_size = index->settings->timeseries_size;
 
+        TREMOR_STAT(g_stat_leaves_popped++);
         if (node->buffer != nullptr)
         {
+            TREMOR_STAT(g_stat_records_seen += node->buffer->partial_buffer_size);
             const int record_count = node->buffer->partial_buffer_size;
             std::vector<std::pair<file_position_type, float>> leaf_hits; // appended once per leaf, not per hit
             // Raw blocks prefetched per record follow the recent number of
@@ -1347,6 +1420,7 @@ int process_pq_of_batch_chatzakis(int current_pq_index, QaWorkerData *input_data
                 if (position_buffer[i] != nullptr && (!record_lb || minidist_paa_to_raw_sax_safe(paa, sax_buffer[i], index) <= bsf))
                     passing.push_back(i);
             }
+            TREMOR_STAT(g_stat_records_lb_pass += passing.size());
 
             // Pass 2: distances of the records that pass. They point to
             // scattered positions, so the loop is bound by memory latency:
@@ -1699,12 +1773,17 @@ void *dynamic_query_scheduler(void *rfdata)
     CommunicationModuleData *comm_data = data->comm_data;
     volatile char *threads_finished = data->threads_finished;
 
+    // TREMOR_SCHED_SLEEP (experiments only): microseconds between polls; by default the thread polls without
+    // pausing, as in the evaluation of the paper.
+    static const long sleep_us = std::getenv("TREMOR_SCHED_SLEEP") ? std::atol(std::getenv("TREMOR_SCHED_SLEEP")) : 0;
     while (!(*threads_finished))
     {
         if (comm_data != nullptr)
         {
             call_module(comm_data);
         }
+        if (sleep_us > 0)
+            std::this_thread::sleep_for(std::chrono::microseconds(sleep_us));
     }
 
     pthread_exit(nullptr);
@@ -1887,6 +1966,9 @@ static void refine_in_position_order(QaWorkerData *in_data, bool use_lb)
     CommunicationModuleData *comm_data = in_data->comm_data;
     std::vector<std::pair<file_position_type, float>> hits;
     int blocks_visited = 0;
+#ifdef TREMOR_STATS
+    long long scan_blocks = 0;
+#endif
 
     for (;;)
     {
@@ -1901,6 +1983,7 @@ static void refine_in_position_order(QaWorkerData *in_data, bool use_lb)
             bsf_sharing_recv_bsf(*in_data->bsf_sharing_data, pq_bsf, in_data->workernumber, *in_data->shared_bsf_results,
                                  in_data->bsf_lock, in_data->my_rank, in_data->comm_sz, in_data->query_counter);
 
+        TREMOR_STAT(g_stat_records_seen += end - begin);
         for (long long id = begin; id < end; id++)
         {
             const file_position_type global_pos = static_cast<file_position_type>(owned_start + id);
@@ -1916,6 +1999,9 @@ static void refine_in_position_order(QaWorkerData *in_data, bool use_lb)
 
             const float dist = l2_dist_znorm_subsequence(query, rawfile, local_raw_start, ts_size, means[id], stds[id],
                                                          bound, block_order, &blocks_visited);
+#ifdef TREMOR_STATS
+            scan_blocks += blocks_visited;
+#endif
 
             if (threshold_mode)
             {
@@ -1940,6 +2026,7 @@ static void refine_in_position_order(QaWorkerData *in_data, bool use_lb)
         in_data->threshold_hits->insert(in_data->threshold_hits->end(), hits.begin(), hits.end());
         pthread_mutex_unlock(in_data->threshold_hits_lock);
     }
+    TREMOR_STAT(g_stat_scan_blocks += scan_blocks);
 }
 
 // RefinementMode::Adaptive decision: count the windows of a strided sample
@@ -2130,6 +2217,9 @@ void *qa_exact_search_tremor_worker(void *rfdata)
     BsfSharingData *bsf_sharing_data = in_data->bsf_sharing_data;
 
     int k = in_data->bsf_result->pq_bsf->k;
+#ifdef TREMOR_STATS
+    const long long stat_w0 = stat_now_us();
+#endif
 
     if (in_data->seed_leaf != nullptr)
     {
@@ -2194,11 +2284,35 @@ void *qa_exact_search_tremor_worker(void *rfdata)
                 }
                 pthread_barrier_wait(in_data->sync_barrier);
             }
+#ifdef TREMOR_STATS
+            // Per-worker time of the scan (or FFT pass), and the time to decide (sampling) before it.
+            static std::vector<double> scan_seconds_per_worker(4096);
+            const auto scan_start = std::chrono::steady_clock::now();
+            const double decide_ms = 1e-3 * static_cast<double>(stat_now_us() - stat_w0);
+#endif
             if (*(in_data->adaptive_decision) == 2)
                 fft_in_position_order(in_data);
             else
                 refine_in_position_order(in_data, bounds_prune);
+#ifdef TREMOR_STATS
+            scan_seconds_per_worker[static_cast<size_t>(in_data->workernumber)] =
+                std::chrono::duration<double>(std::chrono::steady_clock::now() - scan_start).count();
+#endif
             pthread_barrier_wait(in_data->sync_barrier);
+#ifdef TREMOR_STATS
+            if (in_data->workernumber == 0)
+            {
+                double lo = 1e30, hi = 0.0, sum = 0.0;
+                for (int w = 0; w < in_data->query_threads; w++)
+                {
+                    const double v = scan_seconds_per_worker[static_cast<size_t>(w)];
+                    lo = std::min(lo, v), hi = std::max(hi, v), sum += v;
+                }
+                std::printf("SCANSTATS query=%d decide_ms=%.2f scan_min_ms=%.2f scan_avg_ms=%.2f scan_max_ms=%.2f blocks=%lld\n",
+                            in_data->query_counter, decide_ms, 1e3 * lo, 1e3 * sum / in_data->query_threads, 1e3 * hi,
+                            g_stat_scan_blocks.exchange(0));
+            }
+#endif
             return nullptr;
         }
     }
@@ -2231,14 +2345,26 @@ void *qa_exact_search_tremor_worker(void *rfdata)
         }
     }
 
+#ifdef TREMOR_STATS
+    stat_max(g_stat_p1_max, stat_now_us() - stat_w0);
+#endif
     pthread_barrier_wait(in_data->sync_barrier);
 
     if (in_data->workernumber == 0)
     {
+#ifdef TREMOR_STATS
+        const long long stat_g0 = stat_now_us();
+#endif
         gather_sort_pqueues(in_data);
+#ifdef TREMOR_STATS
+        g_stat_gather += stat_now_us() - stat_g0;
+#endif
     }
 
     pthread_barrier_wait(in_data->sync_barrier);
+#ifdef TREMOR_STATS
+    const long long stat_p2 = stat_now_us();
+#endif
 
     for (;;)
     {
@@ -2265,6 +2391,15 @@ void *qa_exact_search_tremor_worker(void *rfdata)
             pq->is_processed = 1;
     }
 
+#ifdef TREMOR_STATS
+    {
+        const long long d = stat_now_us() - stat_p2;
+        g_stat_p2_sum += d;
+        stat_max(g_stat_p2_max, d);
+        stat_min(g_stat_p2_min, d);
+        g_stat_workers++;
+    }
+#endif
 
     pthread_barrier_wait(in_data->sync_barrier);
     return nullptr;
@@ -2321,6 +2456,12 @@ query_result qa_exact_search_tremor_knn(SearchFunctionParams args)
 
     args.query_counter = query_id;
     int query_counter = args.query_counter;
+#ifdef TREMOR_STATS
+    static bool first_query = true;
+    if (first_query)
+        tremor_print_vmstat(args.my_rank, "queries");
+    first_query = false;
+#endif
     const double query_start = MPI_Wtime();
     const bool threshold_mode = args.threshold_mode;
 
@@ -2389,10 +2530,12 @@ query_result qa_exact_search_tremor_knn(SearchFunctionParams args)
         pqueue_bsf_destroy(bsf_result.pq_bsf);
         bsf_result.pq_bsf = pqueue_bsf_init(2 * k - 1);
     }
-    isax_node *seed_leaf = knn_exclusion ? query_leaf(index, paa) : nullptr;
+    // TREMOR_NO_KNN_SEED (experiments only): no first bound from the index, as in a plain scan.
+    static const bool seed_knn = std::getenv("TREMOR_NO_KNN_SEED") == nullptr;
+    isax_node *seed_leaf = knn_exclusion && seed_knn ? query_leaf(index, paa) : nullptr;
     // Without replication every rank answers every query in the same order,
     // so the ranks can share their first bounds (share_knn_bound).
-    const bool share_seed = knn_exclusion && comm_sz > 1 && rep_get_repgroup_nodes(*replication_data, my_rank) == 1;
+    const bool share_seed = knn_exclusion && seed_knn && comm_sz > 1 && rep_get_repgroup_nodes(*replication_data, my_rank) == 1;
 
     // NOTE: rerank_pq_exact_l2 is intentionally not invoked here.
     // It assumed `rawfile` was an array of independent dim-length vectors
@@ -2448,6 +2591,9 @@ query_result qa_exact_search_tremor_knn(SearchFunctionParams args)
     volatile long long adaptive_sample_blocks = 0;
     volatile long long refine_cursor = 0;
     volatile int adaptive_decision = 0;
+#ifdef TREMOR_STATS
+    const double stat_launch = MPI_Wtime();
+#endif
     std::vector<QaWorkerData> workerdata(static_cast<size_t>(query_threads));
     for (int i = 0; i < query_threads; i++)
     {
@@ -2588,12 +2734,19 @@ query_result qa_exact_search_tremor_knn(SearchFunctionParams args)
         }
     }
 
+#ifdef TREMOR_STATS
+    const double stat_joined = MPI_Wtime();
+#endif
     pthread_barrier_destroy(&sync_barrier);
     pthread_mutex_destroy(&bsf_lock);
     pthread_mutex_destroy(&distances_lock);
     if (knn_exclusion)
     {
         const float bound = bsf_result.pq_bsf->knn[bsf_result.pq_bsf->k - 1];
+#ifdef TREMOR_STATS
+        std::printf("KNNSTATS query=%d candidates=%zu bound_cc=%.4f\n", query_id, knn_candidates.size(),
+                    ed_to_cc(bound, index->settings->timeseries_size));
+#endif
         if (static_cast<size_t>(query_id) >= g_knn_candidates.size())
             g_knn_candidates.resize(static_cast<size_t>(query_id) + 1);
         std::vector<KnnCandidate> &kept = g_knn_candidates[static_cast<size_t>(query_id)];
@@ -2666,6 +2819,10 @@ query_result qa_exact_search_tremor_knn(SearchFunctionParams args)
     }
     release_subtree_batches(batchlist);
 
+#ifdef TREMOR_STATS
+    std::printf("OVERHEAD query=%d setup_ms=%.1f workers_ms=%.1f post_ms=%.1f\n", query_counter,
+                1e3 * (stat_launch - query_start), 1e3 * (stat_joined - stat_launch), 1e3 * (MPI_Wtime() - stat_joined));
+#endif
     // Per-query time on this node and whether the index or the scan answered it.
     const bool scanned = g_refinement_mode == RefinementMode::Adaptive && adaptive_decision == 1;
     const bool fft = g_refinement_mode == RefinementMode::Adaptive && adaptive_decision == 2;
@@ -3163,11 +3320,17 @@ void Tremor::searchIndexL2Squared(TremorQuery *queries, int q_num, int topk,
     const int num_procs = this->comm_sz;
     const int rank = this->my_rank;
 
+#ifdef TREMOR_STATS
+    const double stat_s0 = MPI_Wtime();
+#endif
     if (this->mode == 0)
     {
         tremor_prepare_threshold_output_file(output_file, rank);
         MPI_Barrier(MPI_COMM_WORLD);
     }
+#ifdef TREMOR_STATS
+    const double stat_s1 = MPI_Wtime();
+#endif
 
     if (num_procs == 1)
     {
@@ -3216,7 +3379,29 @@ void Tremor::searchIndexL2Squared(TremorQuery *queries, int q_num, int topk,
             args.threshold_hits = nullptr;
             args.threshold_hits_lock = nullptr;
 
+#ifdef TREMOR_STATS
+            g_stat_leaves_queued = 0;
+            g_stat_leaves_popped = 0;
+            g_stat_records_seen = 0;
+            g_stat_records_lb_pass = 0;
+            g_stat_p1_max = 0;
+            g_stat_gather = 0;
+            g_stat_p2_sum = 0;
+            g_stat_p2_max = 0;
+            g_stat_p2_min = 1LL << 62;
+            g_stat_workers = 0;
+            const double stat_t0 = MPI_Wtime();
+#endif
             query_result result = qa_exact_search_tremor_knn(args);
+#ifdef TREMOR_STATS
+            std::printf("STATS query=%d seconds=%.3f leaves_queued=%lld leaves_popped=%lld records_seen=%lld records_lb_pass=%lld owned=%lld\n",
+                        q_loaded, MPI_Wtime() - stat_t0, g_stat_leaves_queued.load(), g_stat_leaves_popped.load(),
+                        g_stat_records_seen.load(), g_stat_records_lb_pass.load(), (long long)local_owned_subseq_count);
+            std::printf("PHASES query=%d p1_max_ms=%.1f gather_ms=%.1f p2_max_ms=%.1f p2_min_ms=%.1f p2_mean_ms=%.1f workers=%lld\n",
+                        q_loaded, g_stat_p1_max / 1e3, g_stat_gather / 1e3, g_stat_p2_max / 1e3, g_stat_p2_min / 1e3,
+                        g_stat_workers ? g_stat_p2_sum / 1e3 / g_stat_workers : 0.0, g_stat_workers.load());
+            std::fflush(stdout);
+#endif
             results[queries[q_loaded].id] = result;
         }
     }
@@ -3250,6 +3435,7 @@ void Tremor::searchIndexL2Squared(TremorQuery *queries, int q_num, int topk,
                                                                     &replication_data);
         }
 
+        bool coordinator_answered = false; // the coordinator took a template after the initial burst
         while (1)
         {
             if (my_rank == rep_find_coordinator_node_rank(replication_data, my_rank))
@@ -3258,6 +3444,16 @@ void Tremor::searchIndexL2Squared(TremorQuery *queries, int q_num, int topk,
                 {
                     if (q_loaded >= q_num || q_loaded == -1)
                     {
+                        // No more templates than workers: the initial burst handed them all out, so no dispatch call
+                        // sends the termination message that the workers wait for after their template.
+                        if (!coordinator_answered)
+                        {
+                            const int coordinator = rep_find_coordinator_node_rank(replication_data, my_rank);
+                            const int group_nodes = rep_get_repgroup_nodes(replication_data, my_rank);
+                            for (int rank = coordinator + 1; rank < coordinator + group_nodes; rank++)
+                                MPI_Isend(&termination_message_id, 1, MPI_INT, rank, DISTRIBUTED_QUERIES_SEND_QUERY,
+                                          MPI_COMM_WORLD, &send_request[static_cast<size_t>(rank)]);
+                        }
                         if (verbose)
                             printf("[Node %d]: Exiting the dynamic loop\n", my_rank);
                         break;
@@ -3265,6 +3461,7 @@ void Tremor::searchIndexL2Squared(TremorQuery *queries, int q_num, int topk,
 
                     int query_to_keep_stats = q_loaded;
                     q_loaded++;
+                    coordinator_answered = true;
 
                     CommunicationModuleData comm_data;
                     comm_data.module_func = &send_queries_module_coordinator_async_chatzakis;
@@ -3456,6 +3653,9 @@ void Tremor::searchIndexL2Squared(TremorQuery *queries, int q_num, int topk,
     std::memset(I, 0, result_count * sizeof(idx_t));
     std::fill(D, D + result_count, FLT_MAX);
 
+#ifdef TREMOR_STATS
+    const double stat_s2 = MPI_Wtime();
+#endif
     if (this->mode == 0)
     {
         if (g_threshold_output != nullptr &&
@@ -3465,6 +3665,10 @@ void Tremor::searchIndexL2Squared(TremorQuery *queries, int q_num, int topk,
             std::exit(EXIT_FAILURE);
         }
         g_threshold_output = nullptr;
+#ifdef TREMOR_STATS
+        std::printf("SEARCHPHASES rank=%d prepare_s=%.3f loop_s=%.3f close_s=%.3f\n", rank, stat_s1 - stat_s0,
+                    stat_s2 - stat_s1, MPI_Wtime() - stat_s2);
+#endif
         free(nodelist.nlist);
         free_queries(queries, q_num);
         return;
@@ -3799,6 +4003,12 @@ float *Tremor::buildIndexSequence(const float *database, const std::string *file
     MPI_Barrier(MPI_COMM_WORLD);
 
     this->index_memory_bytes = resident_bytes() - resident_after_load;
+#ifdef TREMOR_STATS
+    print_mapping_pages(my_rank, "raw", rawfile);
+    tremor_print_placement(my_rank, "raw", rawfile);
+    print_mapping_pages(my_rank, "means", this->subsequence_means);
+    print_mapping_pages(my_rank, "stds", this->subsequence_stds);
+#endif
     return rawfile;
 }
 

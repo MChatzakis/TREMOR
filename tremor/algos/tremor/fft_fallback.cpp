@@ -112,7 +112,7 @@ namespace tremor_fft
                const float *stds, int threads, int rank)
     {
         State &s = state();
-        if (windows == 0 || m <= 0)
+        if (std::getenv("TREMOR_NO_FFT") != nullptr || windows == 0 || m <= 0)
             return;
         s.raw = raw;
         s.chunk_length = chunk_length;

@@ -153,7 +153,7 @@ The datasets of the paper are available at `https://zenodo.org/records/23084529`
 | Channels | 243 (all channels with templates and at most 2.1 billion points) | 7 (vertical) |
 | Sampling rate | 50 or 100 Hz | 25 Hz |
 | Points per channel | 8.6 million – 1.82 billion | 1.05 – 1.58 billion |
-| Points | 166.5 billion (666 GB) | 10.5 billion (42 GB) |
+| Points | 166.5 billion (665 GB) | 10.5 billion (42 GB) |
 | Templates used | 11,922 (50 per channel; all of them when a channel has fewer) | 4,430 (all) |
 | Template length | 496, 992, or 1,000 points (10 s) | 3,000 points (120 s) |
 | Search in the paper | threshold search | k-NN search |

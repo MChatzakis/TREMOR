@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="assets/tremor_logo.png" alt="TREMOR logo" width="180">
+</p>
+
+<div align="center">
+
 # TREMOR: Template Matching for Large Seismic Data Collections
 
 **Manos Chatzakis**<sup>1</sup>, **Rodrigo Flores-Allende**<sup>2</sup>, **Mikael Freire**<sup>3</sup>, **Yoann Cano**<sup>3</sup>, **Léonard Seydoux**<sup>2</sup>, **Themis Palpanas**<sup>1</sup>
@@ -5,6 +11,8 @@
 <sup>1</sup> Université Paris Cité, LIPADE &nbsp;&nbsp; <sup>2</sup> IPGP &nbsp;&nbsp; <sup>3</sup> CEA
 
 📄 Paper: `<PAPER-LINK>` &nbsp;·&nbsp; 💾 Datasets: `https://zenodo.org/records/23084529`
+
+</div>
 
 ## Abstract
 

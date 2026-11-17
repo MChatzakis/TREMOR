@@ -164,5 +164,6 @@ templates of every channel were sampled. Plots and statistics of every waveform 
 `dataprep/paper_datasets_metadata/`.
 
 
-
+## About
+We thank [Eva Chamilaki](https://evachamilaki.github.io/) for the TREMOR logo.
 

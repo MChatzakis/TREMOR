@@ -10,7 +10,7 @@
 
 <sup>1</sup> Université Paris Cité, LIPADE &nbsp;&nbsp; <sup>2</sup> Université Paris Cité, IPGP &nbsp;&nbsp; <sup>3</sup> CEA, DAM, DIF
 
-📄 Paper: `https://arxiv.org/abs/2610.02534` &nbsp;·&nbsp; 💾 Datasets: `https://zenodo.org/records/23084529`
+📄 Paper: `[https://arxiv.org/abs/2610.02534](https://arxiv.org/abs/2610.02534)` &nbsp;·&nbsp; 💾 Datasets: `[https://zenodo.org/records/23084529](https://zenodo.org/records/23084529)`
 
 </div>
 

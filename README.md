@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/tremor_logo.png" alt="TREMOR logo" width="230">
+  <img src="assets/tremor_logo.png" alt="TREMOR logo" width="300">
 </p>
 
 <div align="center">

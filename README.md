@@ -1,20 +1,18 @@
 <p align="center">
-  <img src="assets/tremor_logo.png" alt="TREMOR logo" width="180">
+  <img src="assets/tremor_logo.png" alt="TREMOR logo" width="230">
 </p>
 
 <div align="center">
 
-# TREMOR: Template Matching for Large Seismic Data Collections
+# Template Matching for Large Seismic Data Collections
 
 **Manos Chatzakis**<sup>1</sup>, **Rodrigo Flores-Allende**<sup>2</sup>, **Mikael Freire**<sup>3</sup>, **Yoann Cano**<sup>3</sup>, **Léonard Seydoux**<sup>2</sup>, **Themis Palpanas**<sup>1</sup>
 
-<sup>1</sup> Université Paris Cité, LIPADE &nbsp;&nbsp; <sup>2</sup> IPGP &nbsp;&nbsp; <sup>3</sup> CEA
+<sup>1</sup> Université Paris Cité, LIPADE &nbsp;&nbsp; <sup>2</sup> Université Paris Cité, IPGP &nbsp;&nbsp; <sup>3</sup> CEA, DAM, DIF
 
-📄 Paper: `<PAPER-LINK>` &nbsp;·&nbsp; 💾 Datasets: `https://zenodo.org/records/23084529`
+📄 Paper: `https://arxiv.org/abs/2610.02534` &nbsp;·&nbsp; 💾 Datasets: `https://zenodo.org/records/23084529`
 
 </div>
-
-## Abstract
 
 Seismic station networks continuously record the ground velocity at several locations on Earth in the form of waveform
 data series, which seismologists analyze to detect various kinds of geophysical events, including earthquakes. Some of
@@ -108,7 +106,7 @@ mpicc -O3 -std=gnu11 -fopenmp -I/path/to/fftw/include -o bin/dmass_v3_main dmass
 
 ## Quick start
 
-Download the datasets (`<DATASET-LINK>`), then run TREMOR with one MPI process per node. With the configuration of the
+Download the datasets, then run TREMOR with one MPI process per node. With the configuration of the
 paper (adaptive search, full replication, 128 threads per node):
 
 ```bash
@@ -145,8 +143,9 @@ correlation of every match); k-NN search writes one CSV (`template, k, position,
 (`<output>.timings.csv`) gives the index construction and query answering time of every process.
 
 ## Datasets
+⚠️ Due to Zenodo size limitations, we currently make available a subset of the datasets. We are working to find a solution to make the full ~700GBs of data available ⚠️
 
-The datasets of the paper are available at `<DATASET-LINK>`:
+The datasets of the paper are available at `https://zenodo.org/records/23084529`.
 
 | | **Maule** | **SeiFR** |
 |---|---|---|
@@ -163,5 +162,7 @@ Waveforms (`<channel>.len<N>.bin`) and templates are raw arrays of 32-bit little
 between 1 and 10 Hz; a template file stores its templates one after the other. The `.q50.json` files record how the 50
 templates of every channel were sampled. Plots and statistics of every waveform and template set are in
 `dataprep/paper_datasets_metadata/`.
+
+
 
 

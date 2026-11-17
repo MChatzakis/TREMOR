@@ -1,4 +1,4 @@
-"""Answer agreement between the methods of the subset evaluation (roots sub_<method>_<kind>_<TAG>).
+"""Answer agreement between the methods of the evaluation (experiments/submit_large.sh).
 
 For every run of TREMOR, compares the answers (template, position) with those of SSS, DMASS-V3 and DMASS-V1 for the
 same run id. Threshold runs: the union of the per-rank shards. k-NN runs: the (template, rank) -> position table.
@@ -8,9 +8,8 @@ next (a boundary detection kept by one engine displaces the next detection, and 
 propagates: the merge keeps the first of detections closer than the merge offset), `tie` when the differing neighbors
 have correlations within 1e-4 of each other.
 
-Usage: python experiments/check_agreement.py [TAG] [kind ...]   (default: 20260929 main scale repl8)
-Large-data evaluation (experiments/submit_large.sh, roots large_<dataset>_<method>_<kind>_<TAG>): give the kinds as
-<dataset>.<kind>, e.g. python experiments/check_agreement.py 20261005 maule.main seifr.main maule.scale ...
+Usage: python experiments/check_agreement.py [TAG] [<dataset>.<kind> ...]   (roots large_<dataset>_<method>_<kind>_<TAG>;
+default: 20261005 maule.main seifr.main maule.scale seifr.scale maule.repl4 seifr.repl4)
 """
 import csv
 import glob
@@ -19,8 +18,8 @@ from collections import Counter
 from pathlib import Path
 
 EVALS = Path(__file__).parent / 'evals'
-TAG = sys.argv[1] if len(sys.argv) > 1 else '20260929'
-KINDS = sys.argv[2:] or ['main', 'scale', 'repl8']
+TAG = sys.argv[1] if len(sys.argv) > 1 else '20261005'
+KINDS = sys.argv[2:] or ['maule.main', 'seifr.main', 'maule.scale', 'seifr.scale', 'maule.repl4', 'seifr.repl4']
 OTHERS = {'sss': ('tremor', 'SSS'), 'dmassv3': ('dmass', 'DMASS-V3'), 'dmassv1': ('dmass', 'DMASS-V1')}
 
 

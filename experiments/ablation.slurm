@@ -10,7 +10,7 @@
 #SBATCH --output=experiments/logs/tremor-ablation.%j.out
 #SBATCH --error=experiments/logs/tremor-ablation.%j.err
 #
-# Ablation of TREMOR's parameters on one Maule channel of the evaluation subset (CHANNEL, e.g. ZE_G50S__HHN), with
+# Ablation of TREMOR's parameters on one Maule channel of the evaluation (CHANNEL, e.g. ZE_G50S__HHN), with
 # the setting of the evaluation: 4 nodes, full replication, the channel's 50 templates. One parameter varies at a
 # time; the others keep their defaults (f = 0.01, b = 0.05, leaf size 2000, 16 PAA segments):
 #   f     scan fallback fraction (--scan-fallback-fraction; "never": index only)   t = 0.99, 0.999 and k = 1
@@ -21,10 +21,12 @@
 #         (noindex), the skip-sequential scan (sss), and the sequential scan without lower bounds (ss)
 # Output: $OUT/ablation.<channel>.<jobid>.csv, one row per run; the answers of every run are compared with those of
 # the default configuration of the same setting (column "same_answers"). Repetitions go to their own directory
-# (OUT=experiments/evals/ablation_20260930_rep2, ...); the notebook takes the median over the repetitions.
+# (OUT=experiments/evals/ablation_20260930_rep2, ...); the paper reports the median over the repetitions.
+# The channel's waveform and templates come from the plan of the main Maule run of experiments/submit_large.sh (ROOT,
+# default experiments/evals/large_maule_tremor_main_20261005), so that run must be prepared first.
 # PARAMS selects the parameters to vary (default "f b leaf paa"), SETTINGS the workloads of f and scan, FS the values
-# of f, LEAVES the leaf sizes, BIN the binary. DEF_F and DEF_B are the defaults of f and b (0.01 and 0.05 until 10-01;
-# the fixed TREMOR of 10-01 uses 0.001 and 0), B_SETTINGS the workloads of b, PARAM_SETTINGS those of leaf and paa.
+# of f, LEAVES the leaf sizes, BIN the binary (default bin/tremor_main). DEF_F and DEF_B are the defaults of f and b
+# (0.01 and 0.05, as in the paper), B_SETTINGS the workloads of b, PARAM_SETTINGS those of leaf and paa.
 # Usage: sbatch --export=ALL,CHANNEL=ZE_G50S__HHN[,OUT=...] experiments/ablation.slurm
 set -uo pipefail
 cd /path/to/TREMOR
@@ -32,8 +34,9 @@ module load intel/21U2/suite
 export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so OMP_NUM_THREADS=128
 
 OUT=${OUT:-experiments/evals/ablation_20260930}
-BIN=${BIN:-experiments/evals/sub_tremor_main_20260929/bin/tremor_main}
-PLAN=experiments/evals/sub_tremor_main_20260929/plans/maule_threshold.tremor.n4.part001.tsv
+ROOT=${ROOT:-experiments/evals/large_maule_tremor_main_20261005}
+BIN=${BIN:-bin/tremor_main}
+PLAN=$ROOT/plans/maule_threshold.tremor.n4.part001.tsv
 CHANNEL=${CHANNEL:?set CHANNEL}
 # waveform, samples, templates, template count and length, merge offset: from the evaluation plan
 read -r SAMPLES WAVEFORM QUERIES COUNT WINDOW OFFSET < <(awk -F'\t' -v c=$CHANNEL '$9 == c { print $15, $17, $18, $10, $11, $12; exit }' $PLAN)

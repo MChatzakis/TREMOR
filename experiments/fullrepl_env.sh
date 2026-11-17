@@ -1,4 +1,4 @@
-# Settings shared by the full-replication submissions (experiments/submit_fullrepl.sh, experiments/submit_dmass_v3.sh).
+# Settings shared by the submissions of the evaluation (experiments/submit_large.sh).
 export SKIP_BUILD=1 CPUS_PER_TASK=128 INDEX_THREADS=128 SEARCH_WORKERS=128 THREADS=128 QUERY_LIMIT=50 QUERY_SEED=20260917
 export MAULE_CASE_COUNT=8 MAULE_MIN_SAMPLES=0 SEIFR_K_VALUES=10 RUNS_PER_ARRAY_TASK=1 ARRAY_THROTTLE=4 SBATCH_TIME=12:00:00
 export ROW_TIMEOUT_SECONDS=10800 ROW_MAX_ATTEMPTS=2 ROW_TIMEOUT_GRACE_SECONDS=120 ROW_TIMEOUT_BY_NODES="1=14400 2=9000 4=5400 8=3600"

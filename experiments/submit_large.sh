@@ -1,19 +1,18 @@
 #!/bin/bash
-# Evaluation on the large data (10-05; replaces the subsets of submit_subsets.sh for the paper's query experiments):
+# The query experiments of the paper, on the large data:
 #   Maule: every channel with templates that one node can hold for every method (<= 2.1G points: 243 of the 249
 #          channels, 166.5G points, 92% of the dataset; the 6 channels of 2.5G points exceed DMASS's FFT length limit
-#          and TREMOR's index under full replication), 50 templates per channel (11,922; the same per-channel sample
-#          as the subsets: seeded by the channel), threshold search;
+#          and TREMOR's index under full replication), 50 templates per channel (11,922; sampled with a seed per
+#          channel), threshold search;
 #   SeiFR: the 7 channels with templates, ALL 4,430 templates, k-NN search.
 # Kinds:
 #   main:  4 nodes, full replication, Maule t = 0.6 .. 0.999, SeiFR k = 1, 2, 5, 10
 #   scale: 1, 2, 8 nodes, full replication, Maule t = 0.9, SeiFR k = 5
 #   repl4: 4 nodes, replication groups 0 and 2 (no replication, Partial-2), Maule t = 0.9, SeiFR k = 5
 #   none8: 8 nodes without replication, Maule t = 0.9, SeiFR k = 5 (TREMOR only: its index construction on 1 and 8 nodes,
-#          Section 4.2.5; added 10-07)
-# Methods: tremor, sss (bin/tremor_main), dmassv3, dmassv1 (bin/dmass_v3_main, bin/dmass_main): the binaries of the
-# subset evaluation, one run (one index build or preprocessing) per setting, as before. DMASS-V1 gets a lower priority
-# (nice) than the other methods.
+#          Section 4.2.5)
+# Methods: tremor, sss (bin/tremor_main), dmassv3, dmassv1 (bin/dmass_v3_main, bin/dmass_main), one run (one index
+# build or preprocessing) per setting. DMASS-V1 gets a lower priority (nice) than the other methods.
 # Roots large_<dataset>_<method>_<kind>_<TAG>; roots that were already submitted are skipped.
 # Usage: TAG=20261005 [METHODS="tremor sss dmassv3 dmassv1"] [KINDS="main scale repl4"] [DATASETS="maule seifr"] \
 #        bash experiments/submit_large.sh
@@ -33,7 +32,8 @@ submit() {  # root nodes groups env...
   echo "$root: $(awk -F'\t' 'NR>1{print $2"_"$3".n"$5":"$9"("$6" tasks, "$7" runs)"}' experiments/evals/$root/submissions.tsv | tr '\n' ' ')"
 }
 
-# Row timeouts (s) per node count, about 3x the longest run expected from the subsets (SeiFR: scaled to all templates).
+# Row timeouts (s) per node count, about 3x the longest run expected (from runs on 20 Maule channels; SeiFR: scaled to
+# all templates).
 timeouts() {  # dataset method
   case $1.$2 in
     maule.tremor|maule.sss|maule.dmassv3) echo "1=1800 2=1200 4=1200 8=1200" ;;

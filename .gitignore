@@ -6,6 +6,7 @@ bin/
 # Experiment outputs and logs
 experiments/evals/
 experiments/results_dmass/
+experiments/dmass_run_limits.md
 experiments/logs/*
 !experiments/logs/.gitkeep
 dataprep/maule/logs/*
